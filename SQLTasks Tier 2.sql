@@ -67,7 +67,7 @@ more than $100. Return the name and monthly maintenance of the facilities
 in question. */
 
 SELECT name, monthlymaintenance,
-		CASE WHEN monthlymaintenance > 100 THEN 'expensive'
+	CASE WHEN monthlymaintenance > 100 THEN 'expensive'
         ELSE 'cheap' END AS cost
 FROM facilities
  
@@ -77,24 +77,20 @@ who signed up. Try not to use the LIMIT clause for your solution. */
 SELECT firstname, surname
 FROM members
 WHERE joindate = ( SELECT MAX(joindate)
-                   FROM members )
+                   FROM members 
+		 )
 				  
 /* Q7: Produce a list of all members who have used a tennis court.
 Include in your output the name of the court, and the name of the member
 formatted as a single column. Ensure no duplicate data, and order by
 the member name. */
 
-SELECT	DISTINCT 		
-		f.name AS facility_name,
-        CONCAT(m.firstname, ' ', m.surname) AS member_name
-
+SELECT	DISTINCT
+	f.name AS facility_name,
+	CONCAT(m.firstname, ' ', m.surname) AS member_name
 FROM	bookings AS b
-        JOIN facilities as f
-		USING(facid)
-        
-        JOIN members as m
-        USING(memid)
- 
+        JOIN facilities as f USING(facid)
+        JOIN members as m USING(memid)
 WHERE	f.name LIKE ( '%TENNIS COURT%' ) 
 ORDER BY member_name
 
@@ -108,17 +104,14 @@ facility, the name of the member formatted as a single column, and the cost.
 Order by descending cost, and do not use any subqueries. */
 
 SELECT	f.name AS facility_name,
-		CONCAT(m.firstname, ' ', m.surname) AS member_name,
+	CONCAT(m.firstname, ' ', m.surname) AS member_name,
         CASE 
-        	WHEN memid = 0 THEN (f.guestcost * b.slots)
-        	ELSE (f.membercost * b.slots) END AS cost
-        
+        WHEN memid = 0 THEN (f.guestcost * b.slots)
+        ELSE (f.membercost * b.slots) END AS cost        
 FROM	bookings as b
-		JOIN members AS m USING(memid)
+	JOIN members AS m USING(memid)
         JOIN facilities AS f USING(facid)
-		
-WHERE	  DATE(starttime) = '2012-09-14'
-
+WHERE	 DATE(starttime) = '2012-09-14'
 HAVING	 cost > 30
 ORDER BY cost DESC
 
@@ -126,23 +119,18 @@ ORDER BY cost DESC
 
 
 SELECT	f.name AS facility_name,
-		CONCAT(m.firstname, ' ', m.surname) AS member_name,
-		cost
-
-FROM 	(
-			SELECT	b.memid, b.facid,
-				CASE
-					WHEN b.memid = 0 THEN (f.guestcost * b.slots)
-					ELSE (f.membercost * b.slots)
-				END AS cost
-			FROM	bookings AS b JOIN facilities AS f USING (facid)
-			WHERE	DATE(b.starttime) = '2012-09-14'
-		) AS subquery
-		
-
-		JOIN members AS m USING (memid)
-		JOIN facilities AS f USING (facid)
-
+	CONCAT(m.firstname, ' ', m.surname) AS member_name,
+	cost
+FROM 	(SELECT	b.memid, b.facid,
+		CASE
+		WHEN b.memid = 0 THEN (f.guestcost * b.slots)
+		ELSE (f.membercost * b.slots)
+		END AS cost
+	 FROM	bookings AS b JOIN facilities AS f USING (facid)
+	 WHERE	DATE(b.starttime) = '2012-09-14'
+	) AS subquery
+	JOIN members AS m USING (memid)
+	JOIN facilities AS f USING (facid)
 WHERE 	cost > 30
 ORDER BY cost DESC;
 
