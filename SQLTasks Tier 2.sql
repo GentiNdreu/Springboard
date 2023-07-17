@@ -143,7 +143,7 @@ QUESTIONS:
 
 
 
--- Check the .ipyb file uploaded in GitHub: https://github.com/GentiNdreu/Springboard/blob/main/SQLTasks%20Tier%202.ipynb
+-- Please check the .ipyb file uploaded in GitHub: https://github.com/GentiNdreu/Springboard/blob/main/SQLTasks%20Tier%202.ipynb
 
 
 
